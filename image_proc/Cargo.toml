@@ -6,3 +6,9 @@ edition = "2024"
 [dependencies]
 image = "0.25.6"
 rayon = "1.10.0"
+
+
+[lib]
+name = "image_proc_lib"
+crate-type = ["cdylib"]
+path = "src/pre_proc_lib/src/lib.rs"

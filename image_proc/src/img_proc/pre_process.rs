@@ -4,6 +4,7 @@ use std::io::{Error, ErrorKind};
 use std::cell::{RefCell};
 use rayon::prelude::*;
 
+#[repr(C)]
 pub struct PreProc {
     src: RefCell<DynamicImage>,  // RefCell 可以内部修改
 }

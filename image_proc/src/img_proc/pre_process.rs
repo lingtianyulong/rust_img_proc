@@ -2,6 +2,7 @@
 use image::{DynamicImage, GrayImage, ColorType};
 use std::io::{Error, ErrorKind};
 use std::cell::{RefCell};
+use rayon::prelude::*;
 
 pub struct PreProc {
     src: RefCell<DynamicImage>,  // RefCell 可以内部修改
@@ -35,6 +36,21 @@ impl PreProc {
                 return Err(Error::new(ErrorKind::InvalidData, "Image is not RGB or RGBA or Luma8"));
             }
         }
+    }
+
+    pub fn threshold(&self, gray: GrayImage, threshold: u8) -> Result<GrayImage, Error> {
+        if self.is_empty() {
+            return Err(Error::new(ErrorKind::InvalidData, "Image is empty"));
+        }
+
+        let (width, height) = gray.dimensions();
+        let mut buffer = gray.into_raw();
+        // 并行处理
+        buffer.par_iter_mut().for_each(|pixel| {
+            *pixel = if *pixel > threshold { 255 } else { 0 };
+        });
+
+        Ok(GrayImage::from_raw(width, height, buffer).expect("Failed to create image from raw data"))
     }
 
     // pub fn image(&self) -> Ref<DynamicImage> {

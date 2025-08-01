@@ -6,7 +6,7 @@ fn main() {
     let image = open("D:\\1.jpg").unwrap();
     let pre_proc = PreProc::new(image);
 
-    let _gray_image = match pre_proc.to_gray() {
+    let gray_image = match pre_proc.to_gray() {
         Ok(gray) => {
             println!("转换成功");
             gray.save("gray.png").unwrap();
@@ -18,4 +18,15 @@ fn main() {
         }
     };
 
+    let binary_image = match pre_proc.threshold(gray_image, 128) {
+        Ok(binary) => {
+            binary
+        }
+        Err(e) => {
+            println!("二值化失败: {}", e);
+            return;  // 提前退出
+        }
+    };
+
+    binary_image.save("binary.png").expect("Failed to save image");
 }

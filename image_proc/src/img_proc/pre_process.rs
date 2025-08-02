@@ -1,18 +1,19 @@
 // 图像预处理模块, 包括灰度化, 二值化, 滤波, 边缘检测, 轮廓检测, 特征提取等
-use image::{DynamicImage, GrayImage, ColorType};
-use std::io::{Error, ErrorKind};
-use std::cell::{RefCell};
+use image::{ColorType, DynamicImage, GrayImage};
 use rayon::prelude::*;
+use std::cell::{Ref, RefCell};
+use std::io::{Error, ErrorKind};
 
 #[repr(C)]
 pub struct PreProc {
-    src: RefCell<DynamicImage>,  // RefCell 可以内部修改
+    src: RefCell<DynamicImage>, // RefCell 可以内部修改
 }
-
 
 impl PreProc {
     pub fn new(image: DynamicImage) -> Self {
-        Self { src: RefCell::new(image) }
+        Self {
+            src: RefCell::new(image),
+        }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -27,14 +28,13 @@ impl PreProc {
 
         let color_type = self.src.borrow().color();
         match color_type {
-            ColorType::Rgb8 | ColorType::Rgba8 => {
-                Ok(self.src.borrow().to_luma8())
-            }
-            ColorType::L8 | ColorType::La8 => {
-                Ok(self.src.borrow().to_luma8())
-            }
+            ColorType::Rgb8 | ColorType::Rgba8 => Ok(self.src.borrow().to_luma8()),
+            ColorType::L8 | ColorType::La8 => Ok(self.src.borrow().to_luma8()),
             _ => {
-                return Err(Error::new(ErrorKind::InvalidData, "Image is not RGB or RGBA or Luma8"));
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    "Image is not RGB or RGBA or Luma8",
+                ));
             }
         }
     }
@@ -51,12 +51,11 @@ impl PreProc {
             *pixel = if *pixel > threshold { 255 } else { 0 };
         });
 
-        Ok(GrayImage::from_raw(width, height, buffer).expect("Failed to create image from raw data"))
+        Ok(GrayImage::from_raw(width, height, buffer)
+            .expect("Failed to create image from raw data"))
     }
 
-    // pub fn image(&self) -> Ref<DynamicImage> {
-    //     self.src.borrow()
-    // }
-
+    pub fn image(&self) -> Ref<DynamicImage> {
+        self.src.borrow()
+    }
 }
-

@@ -142,6 +142,8 @@ pub extern "C" fn threshold(handle: *mut c_void, buffer: *mut RustImage, thresho
     buf.channels = 1;
     buf.buffer =  threshold_buffer.as_ptr();
 
+    // 此处保留内存的方式与 to_gray 不同,并同时实现了两种内存释放方式
+    // 此处用作学习参考, 实际项目中, 只用其中一种能满足正常使用的方式即可
     std::mem::forget(threshold_buffer);
 
 }

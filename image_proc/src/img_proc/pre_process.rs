@@ -55,6 +55,7 @@ impl PreProc {
             .expect("Failed to create image from raw data"))
     }
 
+    #[allow(dead_code)]
     pub fn image(&self) -> Ref<DynamicImage> {
         self.src.borrow()
     }

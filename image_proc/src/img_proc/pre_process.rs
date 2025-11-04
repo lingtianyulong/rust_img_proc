@@ -1,5 +1,5 @@
 // 图像预处理模块, 包括灰度化, 二值化, 滤波, 边缘检测, 轮廓检测, 特征提取等
-use image::{ DynamicImage, GrayImage};
+use image::{DynamicImage, GrayImage};
 use rayon::prelude::*;
 use std::cell::{Ref, RefCell};
 use std::io::{Error, ErrorKind};
@@ -20,7 +20,6 @@ impl PreProc {
     pub fn is_empty(&self) -> bool {
         self.src.borrow().width() == 0 || self.src.borrow().height() == 0
     }
-
 
     pub fn threshold(&self, gray: GrayImage, threshold: u8) -> Result<GrayImage, Error> {
         if self.is_empty() {

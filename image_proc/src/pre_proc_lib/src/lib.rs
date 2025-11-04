@@ -1,14 +1,13 @@
-#[path = "../../img_proc/pre_process.rs"]
-mod pre_process;
 #[path = "../../conv_color/conv_color.rs"]
 mod conv_color;
+#[path = "../../img_proc/pre_process.rs"]
+mod pre_process;
 
+use conv_color::ConvterColor;
 use image::{DynamicImage, ImageBuffer};
 use pre_process::PreProc;
 use std::ffi::c_void;
 use std::slice;
-use conv_color::ConvterColor;
-
 
 #[repr(C)]
 pub struct RustImage {
@@ -118,7 +117,6 @@ pub extern "C" fn to_gray(handle: *mut c_void, buffer: *mut RustImage) {
     buf.height = height;
     buf.channels = 1; // 灰度图像只有1个通道
     buf.buffer = data_ptr;
-
 }
 
 /// 对图像进行二值化阈值处理

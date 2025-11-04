@@ -1,13 +1,15 @@
 use image::open;
+mod conv_color;
 mod img_proc;
+use conv_color::conv_color::ConvterColor;
 use img_proc::pre_process::PreProc;
 
 fn main() {
     let _i = 42;
     let image = open("D:\\1.jpg").unwrap();
-    let pre_proc = PreProc::new(image);
+    let pre_proc = PreProc::new(&image);
 
-    let gray_image = match pre_proc.to_gray() {
+    let gray_image = match ConvterColor::to_gray(&image) {
         Ok(gray) => {
             println!("转换成功");
             gray.save("gray.png").unwrap();
